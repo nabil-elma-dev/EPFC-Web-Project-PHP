@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Welcome</title>
+    <title>Functions</title>
 </head>
 <body>
-    <h1> Welcome </h1>
+    <h1> Functions </h1>
     <p>
         <?php 
             /* Comment déterminer la taille d'une chaîne de caractères ?
