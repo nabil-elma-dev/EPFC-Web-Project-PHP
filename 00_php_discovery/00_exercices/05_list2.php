@@ -11,30 +11,41 @@
                 $inf = $_GET["inf"];
                 $sup = $_GET["sup"];
                 if ($inf === "" || $sup === "") {
-                    $errors[] = "(!) Both sup and inf must be filled!";
+                    $errors[] = "(!) Both sup and inf are required!";
                 }
                 if(is_numeric($inf) && is_numeric($sup)) {
-                    $inf = (int)($inf);
-                    $sup = (int)($sup);
+                    if (!is_it_integer($inf) || !is_it_integer($sup)) {  // source: 
+                        $errors[] = "(!) at least one between inf and sup is not an integer number";
+                    }
                     if ($inf > $sup) {
-                        $errors[] = "(!) inf is greater than sup!";
-                    } else {
-                        echo "<ul>";
-                        for ($i = $inf; $i <= $sup; ++ $i) {
-                            echo "<li>" . $i . "</li>";
-                        };
-                        echo "</ul>";
+                        $errors[] = "(!) inf must not be greater than sup!";
                     }
                 } else {
-                    $errors[] = "(!) At least one among sup and inf is not a number!";
+                    $errors[] = "(!) at least one between inf and sup is not a number";
                 }
             } else {
-                $errors[] = "(!) GET method has not been used for at least 1 param between inf and sup ";
+                $errors[] = "(!) At least one of the inf and sup parameters is missing (not provided via GET).";
             }
-            foreach ($errors as $error) {
-                echo $error;
-                echo "<br>";
-            }
+            if (empty($errors)) {
+                echo "<ul>";
+                for ($i = $inf; $i <= $sup; ++ $i) {
+                    echo "<li>" . (int) ($i) . "</li>";
+                };
+                echo "</ul>";
+            } else {
+                foreach ($errors as $error) {
+                    echo $error;
+                    echo "<br>";
+                }
+            }     
+        ?>
+
+
+        <?php
+            function is_it_integer(string $n) : bool { // Method based on the one suggested by the user "greg": https://stackoverflow.com/questions/2012187/how-to-check-that-a-string-is-an-int-but-not-a-double-etc
+                $int_n = (int)($n);
+                return $int_n == $n ;
+            } 
         ?>
     </body>
 </html>
