@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>list2</title>
+        <title>exercice 5</title>
     </head>
     <body>
         <h1>list2</h1>
