@@ -5,62 +5,59 @@
     </head>
     <body>
         <h1>list2</h1>
-        <?php 
-            /*
-            ENDGOAL: 
-            case 1= parametri ricevuti in GET, easy
-            case 2= parametri non ricevuti in get, quindi formulario per POST
-            */
-            global $inf;
-            global $sup;
-            if (isset($_GET["inf"]) || isset($_GET["sup"])) {
+                
+            <?php 
+                $errors = [];
                 if (isset($_GET["inf"]) && isset($_GET["sup"])) {
                     $inf = $_GET["inf"];
                     $sup = $_GET["sup"];
                     if ($inf === "" || $sup === "") {
-                        $errors[] = "(!) Both sup and inf must be filled!";
+                        $errors[] = "(!) Both sup and inf are required!";
                     }
                     if(is_numeric($inf) && is_numeric($sup)) {
-                        $inf = (int)($inf);
-                        $sup = (int)($sup);
+                        if (!is_it_integer($inf) || !is_it_integer($sup)) {  // source: 
+                            $errors[] = "(!) at least one between inf and sup is not an integer number";
+                        }
                         if ($inf > $sup) {
-                            $errors[] = "(!) inf is greater than sup!";
-                        } else {
-                            echo "<ul>";
-                                for ($i = $inf; $i <= $sup; ++ $i) {
-                                    echo "<li>" . $i . "</li>";
-                                };
-                            echo "</ul>";
+                            $errors[] = "(!) inf must not be greater than sup!";
                         }
                     } else {
-                        $errors[] = "(!) At least one among sup and inf is not a number!";
+                        $errors[] = "(!) at least one between inf and sup is not a number";
                     }
                 } else {
-                    $errors[] = "(!) GET method has not been used for at least 1 param between inf and sup ";
+                    $errors[] = "(!) At least one of the inf and sup parameters is missing (not provided via GET).";
                 }
-            } else {
-        ?>
-            <form action="06_list3.php" method="POST">
+                if (empty($errors)) {
+                    echo "<ul>";
+                    for ($i = $inf; $i <= $sup; ++ $i) {
+                        echo "<li>" . (int) ($i) . "</li>";
+                    };
+                    echo "</ul>";
+                } else {
+                    foreach ($errors as $error) {
+                        echo $error;
+                        echo "<br>";
+                    } 
+            ?>
+           
+            <form action="ex_6.php" method="GET">
                 <p>Borne inférieure: <input type="text" name="inf" /></p>
                 <p>Borne supérieure: <input type="text" name="sup" /></p>
                 <p> <input type="submit" value="Envoyer" /></p>
             </form>
-        <?php 
-            if isset($_POST["inf"] && isset["sup"]) {
-                if is_numeric["inf"] && is_numeric["sup"] {
-                    $inf = (int)($_POST["inf"]);
-                    $sup = (int)($_POST["sup"]);
-                    if ($inf <= $sup) {
-                        echo "<ul>";
-                            for ($i = $inf; $i <= $sup; ++ $i) {
-                                echo "<li>" . $i . "</li>";
-                            };
-                        echo "</ul>";
-                    }
-                }
-            }
-            }
-        ?>
+            
+            <?php 
+                }    
+            ?>
+            
+
+            <?php
+                function is_it_integer(string $n) : bool { // Method based on the one suggested by the user "greg": https://stackoverflow.com/questions/2012187/how-to-check-that-a-string-is-an-int-but-not-a-double-etc
+                    $int_n = (int)($n);
+                    return $int_n == $n ;
+                } 
+            ?>
+        
         
     </body>
 </html>
