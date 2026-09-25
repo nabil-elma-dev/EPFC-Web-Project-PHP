@@ -15,7 +15,7 @@
                         $errors[] = "(!) Both sup and inf are required!";
                     }
                     if(is_numeric($inf) && is_numeric($sup)) {
-                        if (!is_it_integer($inf) || !is_it_integer($sup)) {  // source: 
+                        if (!is_it_integer($inf) || !is_it_integer($sup)) { 
                             $errors[] = "(!) at least one between inf and sup is not an integer number";
                         }
                         if ($inf > $sup) {
