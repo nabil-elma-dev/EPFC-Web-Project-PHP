@@ -7,50 +7,63 @@
     <?php 
 
 // $INF AND $SUP ANALYSIS
-        if (isset($_GET["inf"]) && isset($_GET["sup"])) {
-            $inf = $_GET["inf"];
-            $sup = $_GET["sup"];
-            if ($inf === "" || $sup === "") {
-                $errors[] = "(!) Both sup and inf are required!";
+        $inf = isset($_GET["inf"]) ?
+            $_GET["inf"]
+            : "";
+
+        $sup = isset($_GET["sup"]) ?
+            $_GET["sup"]
+            : "";
+
+        if ($inf === "" || $sup === "") {
+            $errors[] = "(!) Both sup and inf are required!.";
+        }
+        if(is_numeric($inf) && is_numeric($sup)) {
+            if ($inf <= 0 || $sup <= 0) {
+                $errors[] = "(!) only positive numbers are allowed!";
             }
-            if(is_numeric($inf) && is_numeric($sup)) {
-                if ($inf <= 0 || $sup <= 0) {
-                    $errors[] = "(!) only positive numbers are allowed!";
-                }
-                if ($inf > $sup) {
-                    $errors[] = "(!) inf must not be greater than sup!";
-                }
-            } else {
-                $errors[] = "(!) at least one between inf and sup is not a number";
+            if (!is_it_integer($sup) || !is_it_integer($sup)) {
+                $errors[] = "(!) at least one between inf and sup is not an integer number";
+            }   
+            if ($inf > $sup) {
+                $errors[] = "(!) inf must not be greater than sup!";
             }
         } else {
-            $errors[] = "(!) At least one of the inf and sup parameters is missing (not provided via GET).";
+            $errors[] = "(!) at least one between inf and sup is not a number";
         }
-
-// $PAGE ANALYSIS       
-        $page = isset($_GET["page"]) 
-                && is_numeric($_GET["page"]) 
-                && $_GET["page"] !== "0" ? 
-                    (int)($_GET["page"])
-                    : 0;
+        
 
 // $ERRORS ARRAY ANALYSIS    
     // IF-CASE : EMPTY $ERRORS              
         if (empty($errors)) {
-         
+            // CALCULATING $LAST        
+        $last_page = (int) (($sup - $inf) / 20); 
+
+// $PAGE ANALYSIS       
+        $page = isset($_GET["page"]) 
+                && is_numeric($_GET["page"]) 
+                && $_GET["page"] > "0"
+                && $_GET["page"] <= $last_page? 
+                    (int)($_GET["page"])
+                    : 0;
+
+// $THIS_PAGE_MAX_QTY
+        $this_page_max_qty = $sup - ($inf + 20 * $page) < 20 ?
+                $sup - ($inf + 20 * $page) + 1
+                : 20;
+
         // FOR-EACH NUMBERS (MAX QTY: 20)
             echo "<ul>";
-            // $this_page_highest_value = 
-            
-            
-            for ($i = $inf; $i < $inf + 20; ++ $i) {
+
+            for ($i = $inf; $i < $inf + $this_page_max_qty; ++ $i) {
                 echo "<li>" . ((int) ($i) + $page * 20) . "</li>";
             };
+
             echo "</ul>";
 
         // $PAGE_MAX_VALUE CALCULUS    
             $page_max_value = ($sup - $inf) % 20 >= 0 ?
-                (int)(($sup - $inf) / 20)
+                (int)(($sup - $inf) / 20) 
                 : 0;
         
         // "<<"        
@@ -60,10 +73,11 @@
                 echo "<<";
                 echo "</a>";
             }
-            
+
         // FOR LOOP PRINTING VALUES (EACH 20)
             for ($i = $inf; $i <= $sup; $i += 20) {
-                echo "<a href='/tp1/ex_7.php?inf=$inf&sup=$sup&page=$page'>";
+                $current_page = (int)(($i - $inf) / 19);
+                echo "<a href='/tp1/ex_7.php?inf=$inf&sup=$sup&page=$current_page'>";
                 echo $i;
                 echo "</a>";
                 echo " ";
@@ -76,6 +90,13 @@
                 echo ">>";
                 echo "</a>";
             }
+
+            echo "<br>";
+
+        // MODIFY PARAM
+            echo "<a href='/tp1/ex_7.php'>";
+            echo "Modifier paramètres";
+            echo "</a>";
         } 
 
     // ELSE-CASE : $ERRORS NOT EMPTY    
@@ -97,6 +118,11 @@
         }    
     ?>
 
-
+    <?php
+        function is_it_integer(string $n) : bool { // Method based on the one suggested by the user "greg": https://stackoverflow.com/questions/2012187/how-to-check-that-a-string-is-an-int-but-not-a-double-etc
+            $int_n = (int)($n);
+            return $int_n == $n ;
+        } 
+    ?>
 </body>
 </html>
