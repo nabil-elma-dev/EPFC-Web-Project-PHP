@@ -1,3 +1,20 @@
+<?php
+    try
+    {
+        $pdo = new PDO("mysql:host=localhost;dbname=my_social_network_base;charset=utf8mb4", "root", "root");
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+
+        $query = $pdo->prepare("SELECT pseudo FROM Members");
+        $query->execute();
+        $members = $query->fetchAll();
+    }
+    catch (Exception $exc)
+    {
+        die('Error while accessing database. Please contact your administrator.');
+    }
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -18,7 +35,9 @@
         </div>
         <div class="main">
             <ul>
-                <li>List to complete...</li>
+                <?php foreach($members as $member): ?> 
+                    <li> <?= $member["pseudo"] ?> </li>
+                <?php endforeach ?>
             </ul>
         </div>
     </body>
