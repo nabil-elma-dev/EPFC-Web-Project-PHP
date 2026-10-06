@@ -5,9 +5,9 @@
         die("This page excepts a 'pseudo' parameter via the GET method");
     }
 
+    require_once "functions.php";
+    
     try {
-        $pdo = new PDO("mysql:host=localhost;dbname=my_social_network_base;charset=utf8mb4", "root", "root");
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $query = $pdo->prepare("SELECT * FROM Members WHERE pseudo = :pseudo");
         $query->execute(["pseudo" => $pseudo]);
         $profile = $query->fetch();

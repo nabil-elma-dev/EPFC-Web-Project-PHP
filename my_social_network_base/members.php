@@ -1,10 +1,9 @@
 <?php
+
+    require_once "functions.php";
+
     try
     {
-        $pdo = new PDO("mysql:host=localhost;dbname=my_social_network_base;charset=utf8mb4", "root", "root");
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-
         $query = $pdo->prepare("SELECT pseudo FROM Members");
         $query->execute();
         $members = $query->fetchAll();
