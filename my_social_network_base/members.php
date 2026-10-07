@@ -35,7 +35,9 @@
         <div class="main">
             <ul>
                 <?php foreach($members as $member): ?> 
-                    <li> <?= $member["pseudo"] ?> </li>
+                    <li> 
+                        <a href="profile.php?pseudo=<?= $member["pseudo"] ?>"> <?= $member["pseudo"] ?> </a> 
+                    </li>
                 <?php endforeach ?>
             </ul>
         </div>
