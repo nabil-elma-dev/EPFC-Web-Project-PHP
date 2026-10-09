@@ -53,7 +53,7 @@
                 <?php if(mb_strlen($picture_path ?? '') == 0) : ?>
                     <?= 'No picture loaded yet!' ?>
                 <?php else : ?>
-                    <img src="<?php $picture_path ?>" alt="$pseudo&apos;s picture" width="100" >
+                    <img src="<?= $picture_path ?>" alt="$pseudo&apos;s picture" width="100" >
                 <?php endif; ?>
             </div>
         </div>
