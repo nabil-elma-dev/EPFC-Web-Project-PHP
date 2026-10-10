@@ -2,7 +2,7 @@
 $dbhost = "localhost";
 $dbname = "my_social_network_base";
 $dbuser = "root";
-$dbpassword = "root";
+$dbpassword = "";
 
 
 try
@@ -17,4 +17,10 @@ catch (Exception $exc)
 
 function escape($string) {
     return htmlspecialchars((string)$string, ENT_QUOTES, 'UTF-8');
+}
+
+function redirect($url, $statusCode = 303)
+{
+    header('Location: ' . $url, true, $statusCode);
+    die();
 }
