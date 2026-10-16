@@ -12,7 +12,7 @@
 
     // grab record
     try {
-        $query = $pdo->prepare("SELECT password FROM Members WHERE pseudo = :pseudo");
+        $query = $pdo->prepare("SELECT pseudo, password FROM Members WHERE pseudo = :pseudo");
         $query->execute(["pseudo" => $pseudo]);
     }
     catch (Exception $exc) {
@@ -24,8 +24,12 @@
     // Member record data analysis
     if ($memberRecord === false) {
         $error = "Can't find a member with the pseudo ". escape($pseudo) . ". Please sign up.";
-    } elseif (escape($memberRecord["password"]) !== $password) {
+    } elseif (($memberRecord["password"]) !== $password) {
         $error = "Wrong password. Please try again.";
+    } else {
+        session_regenerate_id(true);
+        $_SESSION["user"] = $pseudo;
+        redirect("profile.php");
     }
 
     /* CASES:

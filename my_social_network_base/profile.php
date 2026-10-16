@@ -1,10 +1,11 @@
 <?php 
     require_once "functions.php";
+    check_login();
 
     if(isset($_GET["pseudo"])) {
-        $pseudo = $_GET["pseudo"];
+        $pseudo = trim($_GET["pseudo"]);
     } else {
-        die("This page excepts a 'pseudo' parameter via the GET method");
+        $pseudo = $user;
     }
     
     try {
@@ -15,7 +16,7 @@
         die("Error while accessing database. Please contact your administrator.");
     }
 
-    if ($query->rowCount() == 0) {
+    if ($profile === false) {
         die("Can't find user" . $pseudo . " in the database.");
     } else {
         $description = $profile["profile"];
