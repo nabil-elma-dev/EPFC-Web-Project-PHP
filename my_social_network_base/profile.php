@@ -1,11 +1,11 @@
 <?php 
+    require_once "functions.php";
+
     if(isset($_GET["pseudo"])) {
         $pseudo = $_GET["pseudo"];
     } else {
         die("This page excepts a 'pseudo' parameter via the GET method");
     }
-
-    require_once "functions.php";
     
     try {
         $query = $pdo->prepare("SELECT * FROM Members WHERE pseudo = :pseudo");
@@ -16,7 +16,7 @@
     }
 
     if ($query->rowCount() == 0) {
-        die("Can't find user '$pseudo' in the database.");
+        die("Can't find user" . $pseudo . " in the database.");
     } else {
         $description = $profile["profile"];
         $picture_path = $profile["picture_path"];

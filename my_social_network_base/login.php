@@ -3,22 +3,28 @@
     require_once "functions.php";
     
     // grab post vars
-    $pseudo = isset($_POST["pseudo"]) ? trim($_POST["pseudo"]) : "";
-    $password = isset($_POST["password"]) ? trim($_POST["password"]) : "";
+    $pseudo = isset($_POST["pseudo"]) ? 
+        trim($_POST["pseudo"]) 
+        : "";
+    $password = isset($_POST["password"]) ? 
+        trim($_POST["password"]) 
+        : "";
 
     // grab record
     try {
-        $query = $pdo->prepare("SELECT pseudo, password FROM Members WHERE pseudo = :pseudo");
+        $query = $pdo->prepare("SELECT password FROM Members WHERE pseudo = :pseudo");
         $query->execute(["pseudo" => $pseudo]);
-        $memberRecord = $query->fetch();
     }
     catch (Exception $exc) {
         die("Error while accessing database. Please contact your administrator.");
     }
-    // user's data analysis
-    if ($query->rowCount() === 0 || ($pseudo !== $memberRecord["pseudo"])) {
-        $error = "Can't find a member with the pseudo '$pseudo'. Please sign up.";
-    } elseif ($query->rowCount() === 1 && $memberRecord["password"] !== $password) {
+
+    $memberRecord = $query->fetch();
+
+    // Member record data analysis
+    if ($memberRecord === false) {
+        $error = "Can't find a member with the pseudo ". escape($pseudo) . ". Please sign up.";
+    } elseif (escape($memberRecord["password"]) !== $password) {
         $error = "Wrong password. Please try again.";
     }
 
@@ -65,7 +71,7 @@
         <?php endif; ?>
         
         <?php if (!isset($error)) {
-            $url = 'http://localhost/my_social_network_base/profile.php?pseudo=' . escape($pseudo);
+            $url = 'http://localhost/my_social_network_base/profile.php?pseudo=' . $pseudo;
             redirect($url);
         } ?>
         </body> 
