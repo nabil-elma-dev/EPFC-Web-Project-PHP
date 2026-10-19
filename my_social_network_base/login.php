@@ -70,11 +70,11 @@
                 <input type="submit" value="Log In">
             </form>
         </div>
-        <?php if (isset($error) && $_SERVER['REQUEST_METHOD'] === 'POST') : ?>
+        <?php if (!empty($error) && $_SERVER['REQUEST_METHOD'] === 'POST') : ?>
             <div class="errors"> <?= $error ?> </div>
         <?php endif; ?>
         
-        <?php if (!isset($error)) {
+        <?php if (empty($error)) {
             $url = 'http://localhost/my_social_network_base/profile.php?pseudo=' . $pseudo;
             redirect($url);
         } ?>

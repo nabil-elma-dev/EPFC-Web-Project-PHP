@@ -66,7 +66,7 @@
                 </table>
                 <input type="submit" value="Sign Up">
             </form>
-            <?php if (isset($errors) && $_SERVER['REQUEST_METHOD'] === 'POST') : ?>
+            <?php if (!empty($errors) && $_SERVER['REQUEST_METHOD'] === 'POST') : ?>
                 <div>
                     <ul class="errors">
                         <?php foreach ($errors as $error) : ?>
@@ -75,6 +75,20 @@
                     </ul>
                 </div>
             <?php endif; ?>
+
+            <?php 
+                if(empty($errors)) {
+                    try {
+                        $query = $pdo->prepare("INSERT INTO Members (pseudo, password) VALUES (:pseudo, :password)");
+                        $query->execute(["pseudo" => $pseudo, "password" => $password]);
+                        session_regenerate_id(true);
+                        $_SESSION["user"] = $pseudo;
+                        redirect("profile.php");
+                    } catch (Exception $e) {
+                        die("Error while accessing database. Please contact your administrator.");
+                    }
+                } 
+            ?>
         </div>
     </body>
 </html>
