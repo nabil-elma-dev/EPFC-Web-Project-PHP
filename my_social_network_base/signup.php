@@ -1,3 +1,38 @@
+<?php
+    require_once "functions.php"; 
+
+    $pseudo = isset($_POST['pseudo']) ? trim($_POST['pseudo']) : "";
+    $password = isset($_POST['password']) ? trim($_POST['password']) : "";
+    $password_confirm = isset($_POST['password_confirm']) ? trim($_POST['password_confirm']) : "";
+    
+    $errors = [];
+
+    try {
+        $query = $pdo->prepare("SELECT 1 FROM Members WHERE pseudo = :pseudo");
+        $query->execute(["pseudo" => $pseudo]);
+    } catch (Exception $e) {
+        die("Error while accessing database. Please contact your administrator.");
+    }
+
+    $memberRecord = $query->fetch();
+
+    if ($pseudo === "") {
+        $errors[] = "Username is required!";
+    }
+    if ($memberRecord !== false) {
+        $errors[] = "User " . escape($pseudo) . " already exists!";
+    }
+    if (strlen($pseudo) < 3) {
+        $errors[] = "Pseudo's length must be at least 3!";
+    } 
+    if ($password === "" || $password_confirm === "") {
+        $errors[] = "Both password and password_confirm must be filled!";
+    }
+    if (strcmp($password, $password_confirm) !== 0) { // source: https://www.php.net/manual/en/function.strcmp.php
+        $errors[] = "Passwords put do not match!";
+    }
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -13,6 +48,7 @@
         </div>
         <div class="main">
             <h4>Please enter your details to sign up:</h4>
+            <!-- form -->
             <form action="signup.php" method="post">
                 <table>
                     <tr>
@@ -30,6 +66,15 @@
                 </table>
                 <input type="submit" value="Sign Up">
             </form>
+            <?php if (isset($errors) && $_SERVER['REQUEST_METHOD'] === 'POST') : ?>
+                <div>
+                    <ul class="errors">
+                        <?php foreach ($errors as $error) : ?>
+                            <li> <?= $error ?> </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
         </div>
     </body>
 </html>

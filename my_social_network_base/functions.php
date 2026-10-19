@@ -34,3 +34,12 @@ function check_login() {
         $user = $_SESSION['user'];
     }
 }
+
+function insert_new_member($pseudo, $password) {
+    try {
+        $query = $pdo->prepare("INSERT INTO Members (pseudo, password) VALUES (:pseudo, :password)");
+        $query->execute(["pseudo" => $pseudo, "password" => $password]);
+    } catch (Exception $e) {
+        die("Error while accessing database. Please contact your administrator.");
+    }
+}
