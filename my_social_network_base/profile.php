@@ -47,7 +47,7 @@
                 <?php if (mb_strlen($description ?? '') == 0): ?>
                     <?= 'No profile string entered yet!' ?>
                 <?php else : ?>
-                    <?= $description ?>
+                    <?= escape($description) ?>
                 <?php endif; ?>
             </div>
             <div>
