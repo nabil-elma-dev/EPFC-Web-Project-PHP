@@ -22,9 +22,49 @@
             $query = $pdo->prepare("UPDATE Members SET profile = :profile WHERE pseudo = :pseudo");
             $query->execute(["profile" => $new_profile_description, "pseudo" => $pseudo]);
         } catch (Exception $e) {
-
+            die("Error while accessing database. Please contact your administrator.");
         };
     }
+
+    // analysing image about to be uploaded
+    if(isset($_FILES['image']['name']) && $_FILES['images']['name'] !== '') { // instructions says != but it does not work
+        if ($_FILES['image']['error'] == 0) {
+
+            $typeOK = TRUE;
+
+            // analysing image's extension
+            if($_FILES['image']['type'] == "image/gif") {
+                $saveTo = $user.".gif";
+            }
+            else if($_FILES['image']['type'] == "image/jpeg") {
+                $saveTo = $user.".jpeg";
+            }
+            else if($_FILES['image']['type'] == "image/png") {
+                $saveTo = $user.".png";
+            } else {
+                $typeOK = FALSE;
+                $error = "Unsupported image format: gif, jpeg or png!";
+            }
+
+            // uploading image 
+            if($typeOK) {
+                move_uploaded_file($_FILES['image']['tmp_name'], $saveTo);
+                try{
+                    $query = $pdo->prepare("UPDATE Members SET picture_path = :path WHERE pseudo = :pseudo");
+                    $query->execute(["path" => $saveTo, "pseudo" => $user]);
+                    $success = "Your profile has been successfully updated.";
+                    $profile_picture = $saveTo; //updating $profile_picture variable 
+                } catch (Exception $ex) {
+                    die("Error while accessing database. Please contact your administrator.");
+                }
+            }
+
+        } else {
+            $error = "Error while uploading file";
+        }
+    }
+
+
 ?>
 
 <!DOCTYPE html>
