@@ -69,7 +69,7 @@
         // "<<"        
             if ($page != 0) { 
                 $previous= $page - 1;
-                echo "<a href='/tp1/ex_7.php?inf=$inf&sup=$sup&page=$previous'>";
+                echo "<a href='ex_7.php?inf=$inf&sup=$sup&page=$previous'>";
                 echo "<<";
                 echo "</a>";
             }
@@ -77,7 +77,7 @@
         // FOR LOOP PRINTING VALUES (EACH 20)
             for ($i = $inf; $i <= $sup; $i += 20) {
                 $current_page = (int)(($i - $inf) / 19);
-                echo "<a href='/tp1/ex_7.php?inf=$inf&sup=$sup&page=$current_page'>";
+                echo "<a href='ex_7.php?inf=$inf&sup=$sup&page=$current_page'>";
                 echo $i;
                 echo "</a>";
                 echo " ";
@@ -86,7 +86,7 @@
         // ">>"    
             if ($page < $page_max_value) { 
                 $next = $page + 1;
-                echo "<a href='/tp1/ex_7.php?inf=$inf&sup=$sup&page=$next'>";
+                echo "<a href='ex_7.php?inf=$inf&sup=$sup&page=$next'>";
                 echo ">>";
                 echo "</a>";
             }
@@ -94,7 +94,7 @@
             echo "<br>";
 
         // MODIFY PARAM
-            echo "<a href='/tp1/ex_7.php'>";
+            echo "<a href='ex_7.php'>";
             echo "Modifier paramètres";
             echo "</a>";
         } 

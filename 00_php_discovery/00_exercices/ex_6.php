@@ -39,12 +39,12 @@
                         echo "<br>";
                     } 
             ?>
-           
-            <form action="ex_6.php" method="GET">
-                <p>Borne inférieure: <input type="text" name="inf" /></p>
-                <p>Borne supérieure: <input type="text" name="sup" /></p>
-                <p> <input type="submit" value="Envoyer" /></p>
-            </form>
+                <!-- form shown in else-case -->
+                <form action="ex_6.php" method="GET">
+                    <p>Borne inférieure: <input type="text" name="inf" /></p>
+                    <p>Borne supérieure: <input type="text" name="sup" /></p>
+                    <p> <input type="submit" value="Envoyer" /></p>
+                </form>
             
             <?php 
                 }    

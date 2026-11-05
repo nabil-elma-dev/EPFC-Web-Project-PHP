@@ -23,10 +23,15 @@
 
             if (empty($errors)) {
                 echo $BEfranc / 40.3399; 
-                echo "<a href='/tp1/ex_7bis.php'>";
+                echo "<br>";
+                echo "<a href='ex_7bis.php'>";
                     echo "Put another BE franc value";
                 echo "</a>";
             } else {
+                foreach ($errors as $error) {
+                    echo $error;
+                    echo "<br>";
+                }
         ?>
         
     </body>
