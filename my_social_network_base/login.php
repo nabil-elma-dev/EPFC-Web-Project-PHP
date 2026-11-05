@@ -24,7 +24,7 @@
     // Member record data analysis
     if ($memberRecord === false) {
         $error = "Can't find a member with the pseudo ". escape($pseudo) . ". Please sign up.";
-    } elseif (($memberRecord["password"]) !== $password) {
+    } elseif (password_verify($password, $memberRecord["password"]) !== TRUE) { // verifying whether the given password matches the hash extracted from the database
         $error = "Wrong password. Please try again.";
     } else {
         session_regenerate_id(true);

@@ -79,8 +79,10 @@
             <?php 
                 if(empty($errors)) {
                     try {
-                        $query = $pdo->prepare("INSERT INTO Members (pseudo, password) VALUES (:pseudo, :password)");
-                        $query->execute(["pseudo" => $pseudo, "password" => $password]);
+                        // hashing password and inserting print
+                        $hash = password_hash($password, PASSWORD_BCRYPT);
+                        $query = $pdo->prepare("INSERT INTO Members (pseudo, password) VALUES (:pseudo, :password_hash)");
+                        $query->execute(["pseudo" => $pseudo, "password_hash" => $hash]);
                         session_regenerate_id(true);
                         $_SESSION["user"] = $pseudo;
                         redirect("profile.php");
