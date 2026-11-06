@@ -73,11 +73,11 @@
         }
     }
 
-// Login functions
+// Login && Profile functions
     function get_member_by_pseudo($pseudo) {
         global $pdo_object;
         try {
-            $query = $pdo_object->prepare("SELECT pseudo, password FROM Members WHERE pseudo = :pseudo");
+            $query = $pdo_object->prepare("SELECT * FROM Members WHERE pseudo = :pseudo");
             $query->execute(["pseudo" => $pseudo]);
             return $query->fetch();
         }

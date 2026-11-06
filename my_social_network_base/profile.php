@@ -1,8 +1,6 @@
 <?php 
     require_once "functions.php";
     check_login();
-    $pdo = connect();
-
 
     if(isset($_GET["pseudo"])) {
         $pseudo = trim($_GET["pseudo"]);
@@ -10,13 +8,7 @@
         $pseudo = $user;
     }
     
-    try {
-        $query = $pdo->prepare("SELECT * FROM Members WHERE pseudo = :pseudo");
-        $query->execute(["pseudo" => $pseudo]);
-        $profile = $query->fetch();
-    } catch (Exception $exc) {
-        abort($e);
-    }
+    $profile = get_member_by_pseudo($pseudo);
 
     if ($profile === false) {
         abort("Can't find user " . $pseudo . " in the database.");
