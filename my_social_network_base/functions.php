@@ -17,6 +17,7 @@
         return $pdo;
     }
     
+    $pdo_object = connect();
     
     function escape($var) {
         return htmlspecialchars((string) $var, ENT_QUOTES, "UTF-8");
@@ -44,10 +45,11 @@
         die;
     }
 
+// Sign-up functions    
     function is_pseudo_available($pseudo) {
-        $pdo = connect();
+        global $pdo_object;
         try {
-            $query = $pdo->prepare("SELECT 1 FROM Members WHERE pseudo = :pseudo");
+            $query = $pdo_object->prepare("SELECT 1 FROM Members WHERE pseudo = :pseudo");
             $query->execute(["pseudo" => $pseudo]);
             $memberRecord = $query->fetch();
             return $memberRecord;
@@ -57,16 +59,29 @@
     }
 
     function insert_user($pseudo, $password) {
-        $pdo = connect();
+        global $pdo_object;
         try {
             // hashing password and inserting print
             $hash = password_hash($password, PASSWORD_BCRYPT);
-            $query = $pdo->prepare("INSERT INTO Members (pseudo, password) VALUES (:pseudo, :password_hash)");
+            $query = $pdo_object->prepare("INSERT INTO Members (pseudo, password) VALUES (:pseudo, :password_hash)");
             $query->execute(["pseudo" => $pseudo, "password_hash" => $hash]);
             session_regenerate_id(true);
             $_SESSION["user"] = $pseudo;
             redirect("profile.php");
         } catch (Exception $e) {
+            abort($e);
+        }
+    }
+
+// Login functions
+    function get_member_by_pseudo($pseudo) {
+        global $pdo_object;
+        try {
+            $query = $pdo_object->prepare("SELECT pseudo, password FROM Members WHERE pseudo = :pseudo");
+            $query->execute(["pseudo" => $pseudo]);
+            return $query->fetch();
+        }
+        catch (Exception $exc) {
             abort($e);
         }
     }

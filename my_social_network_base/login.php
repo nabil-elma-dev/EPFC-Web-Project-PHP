@@ -1,7 +1,6 @@
 <?php 
     // grab functions 
     require_once "functions.php";
-    $pdo = connect();
     
     // grab post vars
     $pseudo = isset($_POST["pseudo"]) ? 
@@ -12,15 +11,7 @@
         : "";
 
     // grab record
-    try {
-        $query = $pdo->prepare("SELECT pseudo, password FROM Members WHERE pseudo = :pseudo");
-        $query->execute(["pseudo" => $pseudo]);
-    }
-    catch (Exception $exc) {
-        abort($e);
-    }
-
-    $memberRecord = $query->fetch();
+    $memberRecord = get_member_by_pseudo($pseudo);
 
     // Member record data analysis
     if ($memberRecord === false) {
