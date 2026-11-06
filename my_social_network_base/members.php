@@ -2,15 +2,8 @@
 
     require_once "functions.php";
     check_login();
-    $pdo = connect();
 
-    try {
-        $query = $pdo->prepare("SELECT pseudo FROM Members");
-        $query->execute();
-        $members = $query->fetchAll();
-    } catch (Exception $exc) {
-        abort($e);
-    }
+    $members = get_members();
 ?>
 
 <!DOCTYPE html>

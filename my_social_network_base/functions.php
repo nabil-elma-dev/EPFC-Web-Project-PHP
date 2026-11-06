@@ -85,4 +85,17 @@
             abort($e);
         }
     }
+
+// Member functions
+    function get_members() {
+        global $pdo_object;
+
+        try {
+            $query = $pdo_object->prepare("SELECT pseudo FROM Members");
+            $query->execute();
+            return $query->fetchAll();
+        } catch (Exception $exc) {
+            abort($e);
+        }
+    }
 ?>
