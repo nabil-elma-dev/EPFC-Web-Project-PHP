@@ -1,6 +1,7 @@
 <?php 
     // grab functions 
     require_once "functions.php";
+    $pdo = connect();
     
     // grab post vars
     $pseudo = isset($_POST["pseudo"]) ? 
@@ -16,7 +17,7 @@
         $query->execute(["pseudo" => $pseudo]);
     }
     catch (Exception $exc) {
-        die("Error while accessing database. Please contact your administrator.");
+        abort($e);
     }
 
     $memberRecord = $query->fetch();
@@ -24,7 +25,7 @@
     // Member record data analysis
     if ($memberRecord === false) {
         $error = "Can't find a member with the pseudo ". escape($pseudo) . ". Please sign up.";
-    } elseif (password_verify($password, $memberRecord["password"]) !== TRUE) { // verifying whether the given password matches the hash extracted from the database
+    } elseif (password_verify($password, $memberRecord["password"]) !== TRUE) { // verifying whether the given password matches the hash extracted from the
         $error = "Wrong password. Please try again.";
     } else {
         session_regenerate_id(true);

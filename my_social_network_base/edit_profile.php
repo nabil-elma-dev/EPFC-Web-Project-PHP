@@ -1,6 +1,8 @@
 <?php 
     require_once "functions.php";
     check_login();
+    $pdo = connect();
+
     $pseudo = $_SESSION['user'];
 
     // grabbing user's description and picture_path
@@ -9,7 +11,7 @@
         $query->execute(["pseudo" => $pseudo]);
         $member_record = $query->fetch();
     } catch (Exception $e) {
-        die("Error while accessing database. Please contact your administrator.");
+        abort($e);
     }
 
     $profile_description = $member_record["profile"];
@@ -22,7 +24,7 @@
             $query = $pdo->prepare("UPDATE Members SET profile = :profile WHERE pseudo = :pseudo");
             $query->execute(["profile" => $new_profile_description, "pseudo" => $pseudo]);
         } catch (Exception $e) {
-            die("Error while accessing database. Please contact your administrator.");
+            abort($e);
         };
     }
 
@@ -54,8 +56,8 @@
                     $query->execute(["path" => $saveTo, "pseudo" => $user]);
                     $success = "Your profile has been successfully updated.";
                     $profile_picture = $saveTo; //updating $profile_picture variable 
-                } catch (Exception $ex) {
-                    die("Error while accessing database. Please contact your administrator.");
+                } catch (Exception $e) {
+                    abort($e);
                 }
             }
 
@@ -77,14 +79,7 @@
     </head>
     <body>
         <div class="title">Update Your Profile</div>
-        <div class="menu">
-            <a href="profile.php">Home</a>
-            <a href="members.php">Members</a>
-            <a href="friends.php">Friends</a>
-            <a href="messages.php">Messages</a>
-            <a href="edit_profile.php">Edit Profile</a>
-            <a href="logout.php">Log Out</a>
-        </div>
+        <?php include "menu.php"; ?>
 
         <div class="main">
             <form method="post" action="edit_profile.php" enctype="multipart/form-data">

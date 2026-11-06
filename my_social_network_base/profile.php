@@ -1,6 +1,8 @@
 <?php 
     require_once "functions.php";
     check_login();
+    $pdo = connect();
+
 
     if(isset($_GET["pseudo"])) {
         $pseudo = trim($_GET["pseudo"]);
@@ -13,11 +15,11 @@
         $query->execute(["pseudo" => $pseudo]);
         $profile = $query->fetch();
     } catch (Exception $exc) {
-        die("Error while accessing database. Please contact your administrator.");
+        abort($e);
     }
 
     if ($profile === false) {
-        die("Can't find user" . $pseudo . " in the database.");
+        abort("Can't find user " . $pseudo . " in the database.");
     } else {
         $description = $profile["profile"];
         $picture_path = $profile["picture_path"];
@@ -34,14 +36,7 @@
     </head>
     <body>
         <div class="title">TODO's Profile!</div>
-        <div class="menu">
-            <a href="profile.php">Home</a>
-            <a href="members.php">Members</a>
-            <a href="friends.php">Friends</a>
-            <a href="messages.php">Messages</a>
-            <a href="edit_profile.php">Edit Profile</a>
-            <a href="logout.php">Log Out</a>
-        </div>
+        <?php include "menu.php"; ?>
         <div class="main">
             <div>
                 <?php if (mb_strlen($description ?? '') == 0): ?>

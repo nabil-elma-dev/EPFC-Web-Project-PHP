@@ -7,14 +7,7 @@
     
     $errors = [];
 
-    try {
-        $query = $pdo->prepare("SELECT 1 FROM Members WHERE pseudo = :pseudo");
-        $query->execute(["pseudo" => $pseudo]);
-    } catch (Exception $e) {
-        die("Error while accessing database. Please contact your administrator.");
-    }
-
-    $memberRecord = $query->fetch();
+    $memberRecord = is_pseudo_available($pseudo);
 
     if ($pseudo === "") {
         $errors[] = "Username is required!";
@@ -78,17 +71,7 @@
 
             <?php 
                 if(empty($errors)) {
-                    try {
-                        // hashing password and inserting print
-                        $hash = password_hash($password, PASSWORD_BCRYPT);
-                        $query = $pdo->prepare("INSERT INTO Members (pseudo, password) VALUES (:pseudo, :password_hash)");
-                        $query->execute(["pseudo" => $pseudo, "password_hash" => $hash]);
-                        session_regenerate_id(true);
-                        $_SESSION["user"] = $pseudo;
-                        redirect("profile.php");
-                    } catch (Exception $e) {
-                        die("Error while accessing database. Please contact your administrator.");
-                    }
+                    insert_user($pseudo, $password);
                 } 
             ?>
         </div>
