@@ -73,19 +73,6 @@
         }
     }
 
-// Login && Profile functions
-    function get_member_by_pseudo($pseudo) {
-        global $pdo_object;
-        try {
-            $query = $pdo_object->prepare("SELECT * FROM Members WHERE pseudo = :pseudo");
-            $query->execute(["pseudo" => $pseudo]);
-            return $query->fetch();
-        }
-        catch (Exception $exc) {
-            abort($e);
-        }
-    }
-
 // Member functions
     function get_members() {
         global $pdo_object;
@@ -95,6 +82,40 @@
             $query->execute();
             return $query->fetchAll();
         } catch (Exception $exc) {
+            abort($e);
+        }
+    }
+
+// Edit_profile functions
+    function update_profile_description($new_profile_description, $pseudo) {
+        global $pdo_object;
+        try {
+            $query = $pdo_object->prepare("UPDATE Members SET profile = :profile WHERE pseudo = :pseudo");
+            $query->execute(["profile" => $new_profile_description, "pseudo" => $pseudo]);
+        } catch (Exception $e) {
+            abort($e);
+        };
+    }
+
+    function update_profile_picture($saveTo, $user) {
+        global $pdo_object;
+        try{
+            $query = $pdo_object->prepare("UPDATE Members SET picture_path = :path WHERE pseudo = :pseudo");
+            $query->execute(["path" => $saveTo, "pseudo" => $user]);
+        } catch (Exception $e) {
+            abort($e);
+        }
+    }
+
+// Login && profile && edit_profile functions
+    function get_member_by_pseudo($pseudo) {
+        global $pdo_object;
+        try {
+            $query = $pdo_object->prepare("SELECT * FROM Members WHERE pseudo = :pseudo");
+            $query->execute(["pseudo" => $pseudo]);
+            return $query->fetch();
+        }
+        catch (Exception $exc) {
             abort($e);
         }
     }

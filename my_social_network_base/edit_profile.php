@@ -1,18 +1,11 @@
 <?php 
     require_once "functions.php";
     check_login();
-    $pdo = connect();
 
     $pseudo = $_SESSION['user'];
 
     // grabbing user's description and picture_path
-    try {
-        $query = $pdo->prepare('SELECT profile, picture_path FROM Members WHERE pseudo = :pseudo');
-        $query->execute(["pseudo" => $pseudo]);
-        $member_record = $query->fetch();
-    } catch (Exception $e) {
-        abort($e);
-    }
+    $member_record = get_member_by_pseudo($pseudo);
 
     $profile_description = $member_record["profile"];
     $profile_picture = $member_record["picture_path"];
@@ -20,12 +13,7 @@
     // calling update if user typed something on profile textarea
     if (isset($_POST["profile"])) {
         $new_profile_description = trim($_POST["profile"]);
-        try {
-            $query = $pdo->prepare("UPDATE Members SET profile = :profile WHERE pseudo = :pseudo");
-            $query->execute(["profile" => $new_profile_description, "pseudo" => $pseudo]);
-        } catch (Exception $e) {
-            abort($e);
-        };
+        update_profile_description($new_profile_description, $pseudo);
     }
 
     // analysing image about to be uploaded
@@ -36,13 +24,11 @@
 
             // analysing image's extension
             if($_FILES['image']['type'] == "image/gif") {
-                $saveTo = $user.".gif";
-            }
-            else if($_FILES['image']['type'] == "image/jpeg") {
-                $saveTo = $user.".jpeg";
-            }
-            else if($_FILES['image']['type'] == "image/png") {
-                $saveTo = $user.".png";
+                $saveTo = $user . ".gif";
+            } else if($_FILES['image']['type'] == "image/jpeg") {
+                $saveTo = $user . ".jpeg";
+            } else if($_FILES['image']['type'] == "image/png") {
+                $saveTo = $user . ".png";
             } else {
                 $typeOK = FALSE;
                 $error = "Unsupported image format: gif, jpeg or png!";
@@ -51,14 +37,9 @@
             // uploading image 
             if($typeOK) {
                 move_uploaded_file($_FILES['image']['tmp_name'], $saveTo);
-                try{
-                    $query = $pdo->prepare("UPDATE Members SET picture_path = :path WHERE pseudo = :pseudo");
-                    $query->execute(["path" => $saveTo, "pseudo" => $user]);
-                    $success = "Your profile has been successfully updated.";
-                    $profile_picture = $saveTo; //updating $profile_picture variable 
-                } catch (Exception $e) {
-                    abort($e);
-                }
+                update_profile_picture($saveTo, $user);
+                $success = "Your profile has been successfully updated.";
+                $profile_picture = $saveTo; //updating $profile_picture variable 
             }
 
         } else {
